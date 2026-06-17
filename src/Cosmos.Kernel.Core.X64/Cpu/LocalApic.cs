@@ -74,6 +74,8 @@ public static class LocalApic
     /// <param name="baseAddress">The physical address of the Local APIC registers.</param>
     public static void Initialize(ulong baseAddress)
     {
+        //Check if X2APIC is present
+
         _baseAddress = baseAddress;
 
         Serial.Write("[LocalAPIC] Initializing at 0x", baseAddress.ToString("X"), "\n");

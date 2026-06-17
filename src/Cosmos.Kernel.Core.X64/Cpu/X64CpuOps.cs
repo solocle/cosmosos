@@ -30,6 +30,14 @@ public class X64CpuOps : ICpuOps
     /// </summary>
     public static ulong ReadTSC() => X64CpuNative.ReadTsc();
 
+    public static unsafe void GetCPUID(uint eax, uint ecx, out CpuidResult result)
+    {
+        fixed (CpuidResult* pRes = &result)
+        {
+            X64CpuNative.ReadCPUID(eax, ecx, pRes);
+        }
+    }
+
     // Native import lives in Cosmos.Kernel.Core.X64/Bridge/Import/X64CpuNative.cs.
 
     /// <summary>
