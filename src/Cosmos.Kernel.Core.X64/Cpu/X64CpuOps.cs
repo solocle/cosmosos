@@ -40,7 +40,7 @@ public class X64CpuOps : ICpuOps
     /// <summary>
     /// Writes an MSR
     /// </summary>
-    public static void ReadMSR(uint index, ulong value) => X64CpuNative.WriteMSR(index, value);
+    public static void WriteMSR(uint index, ulong value) => X64CpuNative.WriteMSR(index, value);
 
     /// <summary>
     /// Reads the CPUID information
