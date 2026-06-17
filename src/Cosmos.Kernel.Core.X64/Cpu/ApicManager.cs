@@ -96,8 +96,17 @@ public static class ApicManager
         }
 
         // Route through I/O APIC
-        byte targetApicId = LocalApic.GetId();
-        IoApic.RouteIrq(irq, vector, targetApicId, irqOverride, startMasked);
+        uint targetApicId = LocalApic.GetId();
+        byte compatId = (byte)targetApicId;
+        if (compatId != targetApicId)
+        {
+            Serial.Write($"[ApicManager] ERROR: Target APIC ID {targetApicId} exceeds 8-bit limit for I/O APIC, cannot route IRQ.\n");
+        }
+        else
+        {
+            IoApic.RouteIrq(irq, vector, compatId, irqOverride, startMasked);
+        }
+
     }
 
     /// <summary>
