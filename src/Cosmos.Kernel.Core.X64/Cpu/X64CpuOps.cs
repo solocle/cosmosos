@@ -30,6 +30,21 @@ public class X64CpuOps : ICpuOps
     /// </summary>
     public static ulong ReadTSC() => X64CpuNative.ReadTsc();
 
+
+    /// <summary>
+    /// Reads an MSR
+    /// Returns the 64-bit MSR value
+    /// </summary>
+    public static ulong ReadMSR(uint index) => X64CpuNative.ReadMSR(index);
+
+    /// <summary>
+    /// Writes an MSR
+    /// </summary>
+    public static void ReadMSR(uint index, ulong value) => X64CpuNative.WriteMSR(index, value);
+
+    /// <summary>
+    /// Reads the CPUID information
+    /// </summary>
     public static unsafe void GetCPUID(uint eax, uint ecx, out CpuidResult result)
     {
         fixed (CpuidResult* pRes = &result)

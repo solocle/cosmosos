@@ -19,4 +19,12 @@ public static partial class X64CpuNative
     [LibraryImport("*", EntryPoint = "_native_cpu_cpuid")]
     [SuppressGCTransition]
     public static unsafe partial void ReadCPUID(uint eax, uint ecx, CpuidResult* result);
+
+    [LibraryImport("*", EntryPoint = "_native_cpu_rdmsr")]
+    [SuppressGCTransition]
+    public static unsafe partial ulong ReadMSR(uint index);
+
+    [LibraryImport("*", EntryPoint = "_native_cpu_wrmsr")]
+    [SuppressGCTransition]
+    public static unsafe partial void WriteMSR(uint index, ulong value);
 }

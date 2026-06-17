@@ -7,6 +7,8 @@
 .global _native_cpu_save_irq_and_disable
 .global _native_cpu_restore_irq
 .global _native_cpu_cpuid
+.global _native_cpu_rdmsr
+.global _native_cpu_wrmsr
 
 .text
 
@@ -47,10 +49,10 @@ _native_cpu_rdtsc:
     ret
 
 
-.equ CPUID__Rax,   0x00
-.equ CPUID__Rbx,   0x08
-.equ CPUID__Rcx,   0x10
-.equ CPUID__Rdx,   0x18
+.equ CPUID__Eax,   0x00
+.equ CPUID__Ebx,   0x04
+.equ CPUID__Ecx,   0x08
+.equ CPUID__Edx,   0x0C
 // Read CPUID (eax, ecx, result*)
 //
 _native_cpu_cpuid:
@@ -61,10 +63,38 @@ mov rdi, rdx
 
 cpuid
 
-mov [rdi + CPUID__Rax], rax
-mov [rdi + CPUID__Rbx], rbx
-mov [rdi + CPUID__Rcx], rcx
-mov [rdi + CPUID__Rdx], rdx
+mov [rdi + CPUID__Eax], eax
+mov [rdi + CPUID__Ebx], ebx
+mov [rdi + CPUID__Ecx], ecx
+mov [rdi + CPUID__Edx], edx
 
 pop rbx
+ret
+
+// Read Model Specific Register
+// Input: EDI = MSR index
+// Returns: 64-bit MSR value in RAX
+_native_cpu_rdmsr:
+mov ecx, edi
+
+rdmsr
+
+// EDX:EAX contains the MSR value
+shl rdx, 32
+or rax, rdx     //High order bits are cleared by rdmsr, so we can just OR them in
+
+ret
+
+// Write Model Specific Register
+// Input: EDI = MSR index, RSI = MSR value
+// Returns: 64-bit MSR value in RAX
+_native_cpu_wrmsr:
+mov ecx, edi
+
+mov eax, esi
+mov rdx, rsi
+shr rdx, 32
+
+wrmsr
+
 ret
